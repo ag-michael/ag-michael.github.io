@@ -23,10 +23,10 @@ body {
 <!-- Body -->
 <hr style="color:wheat;">
 <div style="margin-left:20%;margin-right:20%;overflow-wrap:break-word;">
-  <h2>MoonMon: Small Beginnings</h2>
+  <h2>MoonMon: Small Beginnings</h2><br>
 <p>I recently made public a project I've been working on for a few months now, called <a href="https://github.com/ag-michael/MoonMon/" target="_blank">MoonMon</a>. 
     In this post—which I hope will become a series—I'm going to detail why I started this project, my plans for it, and what I've learned so far.</p>
-
+<br>
 <h3>Why I Started Working on MoonMon</h3>
 
 <p>I've had a strong interest in exploit development and vulnerability research for a long time. Last year, I was able to take on the <a href="https://www.offsec.com/courses/exp-301/" target="_blank">Windows User Mode Exploit Development (WUMED)</a> course and subsequently pass the OSED exam.</p>
@@ -36,9 +36,9 @@ body {
 <p>As part of that, I had to evade security tools. A handful of times, I've run into scenarios that required evading an EDR or an AV, and often I was able to get past the obstacle after much lab-testing and PoC'ing my payloads. But a few times, I relied on the research and experience other Red Teamers shared with me.</p><p>Sometimes it was a simple trick; other times, hand-crafted and tailored payloads—dark magic, at least to my novice eyes! </p>
 
 <p>Earlier this year, I bought a copy of Matt Hand's excellent book, "<a href="https://nostarch.com/evading-edr" target="_blank">
-Evading EDR: The Definitive Guide to Defeating Endpoint Detection Systems,</a>" and gave it a read. It was a true eye-opener. I highly recommend this book for anyone practicing red teaming in a Windows environment. I'd worked with Sysmon for a couple of years, and reading this book was like looking under the hood and seeing how the darn thing worked.</p>
+Evading EDR: The Definitive Guide to Defeating Endpoint Detection Systems,</a>" and gave it a read. It was a true eye-opener. I highly recommend this book for anyone practicing red teaming in a Windows environment.</p>
 <p>Callbacks, mini-filters, ETW telemetry, AMSI scanning, and more. Matt expands on how sensors collect telemetry, how the EDR architecture functions, and what weaknesses to look for. I wanted a deeper understanding of kernel programming at this point, so I took on Pavel Yosifovich's "<a href="https://www.amazon.com/Windows-Kernel-Programming-Pavel-Yosifovich/dp/B0BW2X91L2" target="_blank">Windows Kernel Programming</a>" book, which, in my opinion, is a decent complement to "Evading EDR".</p>
-Pavel's book focuses more on how to write a software-only driver (like Sysmon or EDR drivers), offering plenty of in-depth code examples, tips, and tricks. I hope I can write a more in-depth review of both books when time permits.</p>
+Pavel's book focuses more on how to write a software-only driver (like Sysmon or EDR drivers), offering plenty of in-depth code examples, tips, and tricks.</p>
 
 <p> Great as these books are, I feared I would end up forgetting most of what I'd learned. This was also around the time when I started reading blog posts and papers on kernel-mode exploitation.</p>
 
@@ -82,7 +82,7 @@ If MoonMon matures enough, and enough people find it useful, my hope is that it 
 
 <p>If you haven't already, check out "<a href="https://github.com/ag-michael/MoonMon#the-big-and-long-list-of-features-and-ideas" target="_blank">The big and long list of features and ideas!</a>" in the project's Readme.</p>
 <p>Before talking about the logging and prevention capabilities, it's important to describe the configuration capabilities it offers.</p>
-  <p>MoonMon takes a rule-centric approach. The user-space agent (Luna), responsible for installing and configuring MoonMon, processes configuration content defined in YAML configuration files.</p>
+  <p>MoonMon takes a rule-centric approach. The user-space agent, aptly named Luna, is responsible for installing and configuring MoonMon, and processing configuration content defined in YAML configuration files.</p>
  <p>Global settings allow defining various install-time parameters as well as run-time settings, such as enabling or disabling the various callbacks and filters the driver uses. </p>
 <p>Various "lists" contain event-source-specific rules where matches have a predefined effect, such as blocking, logging, or excluding (from logging) matching events.</p>
   
@@ -100,11 +100,19 @@ If MoonMon matures enough, and enough people find it useful, my hope is that it 
   <p>Most of the core driver features are implemented; now my focus is on hardening them while carefully making changes that would improve performance or simply reduce the amount of code. I want to do all this while expanding on the portfolio of tests I need to help reduce the potential of inadvertent bug-introduction.</p>
   <p>At some point, I want to feature-freeze the driver and only touch it for security fixes, hardening, or supporting newer versions of Windows. </p>
 
-  <p>In the near term, I plan on working towards implementing some kernel-mode features such as KAPC injection rules, dynamic configuration reloading, and a more complete tamper-resistance capability. Aside from those, there are still some significant kernel-mode features, such as ETW telemetry that I won't get to for a while, as well as things like Early-Launch Anti-Malware (ELAM) certification and code-signing MoonMon. Much of that depends on other people finding the project useful, if MoonMon becomes production-ready, and if I gain strong confidence in its security posture, as well as finances and Microsoft's good graces.</p>
+  <p>In the near term, I plan on working towards implementing some kernel-mode features such as KAPC injection rules, dynamic configuration reloading, and a more complete tamper-resistance capability. Aside from those, there are still some significant kernel-mode features, such as ETW telemetry which I won't get to for a while, as well as things like Early-Launch Anti-Malware (ELAM) certification and code-signing MoonMon. Much of that depends on other people finding the project useful, if MoonMon becomes production-ready, and if I gain strong confidence in its security posture, as well as finances and Microsoft's good graces.</p>
   <p>I have many other features I haven't implemented yet that are best-implemented by user-space code. The user-space agent (Luna) is where I'm expecting the most changes and feature additions to happen. 
   </p><p>Some interesting user-space features I've planned include YARA scanning (including using YARA rules as part of AMSI scanning), enrichments such as PE headers, file magic, Mark-of-the-Web, and more.</p>
     <p>I also plan on experimenting with user-space-driven prevention capabilities, such as a YARA match resulting in process termination, or PE header details resulting in adding file-access restrictions.</p>
-<p>There are two ideas I'm looking forward to researching and implementing the most. Remote binary logging, which I'm betting will dramatically improve performance by freeing up disk I/O resources as well as freeing the agent from processing logs before shipping centrally. And NTFS ADS tagging—which sounds simple, just add data under NTFS alternative data streams, but could be powerful because those "tags," I'm hoping at least, could be used as part of more complex rules. For example, "If Firefox created the file, the file can't be executed or opened by any other process," or "If a file was downloaded from a specific website, it can't be moved outside of a specific path regex."</p>
+
+    <p>There are a few ideas in particular I'm looking forward to researching and implementing the most. 
+      <ul>
+      <li><b>Remote binary logging:</b> I'm betting will dramatically improve performance by freeing up disk I/O resources as well as freeing the agent from processing logs before shipping centrally. </li>
+      <li><b>NTFS ADS tagging:</b>This sounds simple, just add data under NTFS alternative data streams, but could be powerful because those "tags," I'm hoping at least, could be used as part of more complex rules. For example, "If Firefox created the file, the file can't be executed or opened by any other process," or "If a file was downloaded from a specific website, it can't be moved outside of a specific path regex."</li>
+      <li><b>KAPC injection rules:</b>This will allow both system-wide and application-specific code injection into user-space processes. The possibilities  are endless. EDRs use this technique to implement a sensor in the form of an injected DLL, but power users can also inject code that adjusts application behavior as they see fit.</li>
+      <li><b>ETW Telemetry:</b>There is a wealth of data all sorts of applications expose via ETW. EDRs use this as an added source of visibility. Unfortunately, Microsoft's "Threat Intelligence" ETW telemetry which exposes things like sensitive API calls (like VirtualProtect()) are only available for ELAM signed drivers. But even without that, .NET decompilation and processing and many other data sources could be exposed for logging and prevention.</li>
+      </ul>
+      </p>
     <p>Needless to say, I have many ideas and features I want to experiment with, but my plan is to work on MoonMon incrementally and at a slow-and-steady pace, since after all, I am currently working on it solo and my free time is limited.</p>
       <p>I have been having lots of fun working on MoonMon, and now that the scaffolding is more or less there, I'm hoping incremental and atomic changes over time will result in something useful, not just to myself but to others as well.
     </p>
