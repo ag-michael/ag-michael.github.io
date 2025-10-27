@@ -15,6 +15,10 @@ body {
   a:visited{ color:teal;}
   a:hover{ color:wheat;}
   a:active{ color:whitesmoke;}
+
+}
+h1,h2,h3,h4 {
+    color:wheat;
 }
 </style>
 <!-- Header -->
@@ -92,7 +96,7 @@ body {
 <p>It is important to note that most of the capabilities listed can be outsourced to security vendors such as EDRs and Managed Detection and Response (MDR) providers.</p>
 
 <br>
-<div style="text-align: center;"><img src="02_02.png"/></div>
+<div style="text-align: center;background-color: white;"><img src="02_02.png"/></div>
 <br>
 
 <h3>DEMM-0 -  Purely Reactive</h3>
@@ -168,7 +172,7 @@ body {
 <p>To achieve these goals, the reference lifecycle below is proposed.</p>
 
 <br>
-<div style="text-align: center;"><img src="02_01.png"/></div>
+<div style="text-align: center;background-color: white;"><img src="02_01.png"/></div>
 <br>
 <h3>Develop Rule Content</h3>
 
@@ -261,10 +265,14 @@ body {
 
 <p>Threat actors regularly develop techniques that evade detection rules. This means a rule that is configured to detect a specific technique will be rendered useless if it is too specific. For example, rules that detect a specific command line of an attack tool might stop working if the threat actor adds or removes an extra space or reorders the command-line flags. Attack simulation scenarios can prevent this if detection engineers continually add attacker techniques and take a purple team approach, where some team members work to evade rule detections while others work to update rules and configure automated attack simulation scenarios accordingly.</p>
 
-<!--<h3>Reference Attack simulation/validation pipeline</h3>
+<h3>Reference Attack simulation/validation pipeline</h3>
 
 <p>Below is a diagram of an attack simulation pipeline that implements the best practices mentioned earlier in this post</p>
--->
+
+<br>
+<div style="text-align: center;background-color: white;"><img src="02_00.png" style="object-fit:contain;"/></div>
+<br>
+
 
 <h2>Conclusion</h2>
 
