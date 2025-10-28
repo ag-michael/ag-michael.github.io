@@ -33,7 +33,7 @@ h1,h2,h3,h4 {
 <div style="margin-left:20%;margin-right:20%;overflow-wrap:break-word;">
 <h1>Defending Against Advanced Threats</h1>
 
-<p><i>This post will cover strategies and tactical considerations for detecting advanced threats, with a focus on Detectin Engineering.</i></p>
+<p><i>This post will cover strategies and tactical considerations for detecting advanced threats, with a focus on Detection Engineering.</i></p>
 
 <h2>Introduction</h2>
 
@@ -43,7 +43,7 @@ h1,h2,h3,h4 {
 
 <p>In this post, an approach on how a modern blue team (defenders) can prepare to detect and respond to Advanced Persistent Threats (APTs) is proposed. A capability-driven maturity model is also introduced, which allows security teams to measure attack readiness, establish goals, and measure progress with respect to their ability to detect APTs.</p>
 
-<p>Lastly, a reference Detectin Engineering lifecycle as well as a related Attack Simulation/Validation Detection-as-Code pipeline will be covered, where detection capability is continually tested against current detection rules and platforms.</p>
+<p>Lastly, a reference Detection Engineering lifecycle as well as a related Attack Simulation/Validation Detection-as-Code pipeline will be covered, where detection capability is continually tested against current detection rules and platforms.</p>
 
 <h3>What's happening out there?</h3>
 
@@ -79,19 +79,19 @@ h1,h2,h3,h4 {
 
 <p>A mature Threat Intelligence program will involve qualified analysts who will consume Threat Intelligence reports and work with other teams to disseminate prioritized and actionable intelligence. This means, for example, detection rules and Threat Hunting exercises can be optimized to focus on the most relevant threats against the organization. Incident responders, threat hunters, and detection engineers can focus on the most up-to-date tactical intelligence with the highest adaptation cost for threat actors, while automated detections can be optimized to operationalize low adaptation cost Indicators of Compromise (IoCs).</p>
 
-<h4>Detectin Engineering</h4>
+<h4>Detection Engineering</h4>
 
 <p>Both Threat Hunting and Purple Teaming are supposed to contribute to an organization's detection capability. Successful hunts should be converted into detection rules, as should missed detections from Purple Team exercises. The overarching goal of both disciplines is to reduce threat actor dwell time.</p>
 
-<p>As a result, a mature organization capable of detecting advanced threats should not only have a mature Threat Hunting, Threat Intelligence, and Purple Teaming program, but it should also have a mature Detectin Engineering program that integrates well with all of them.</p>
+<p>As a result, a mature organization capable of detecting advanced threats should not only have a mature Threat Hunting, Threat Intelligence, and Purple Teaming program, but it should also have a mature Detection Engineering program that integrates well with all of them.</p>
 
-<p>At a high level, there are two means of detecting advanced threats: Threat Hunting and detection rules. The rest of this post focuses on Detectin Engineering, which is the process and discipline of crafting and maintaining real-time detections.</p>
+<p>At a high level, there are two means of detecting advanced threats: Threat Hunting and detection rules. The rest of this post focuses on Detection Engineering, which is the process and discipline of crafting and maintaining real-time detections.</p>
 
-<h2>Detectin Engineering Maturity Model (DEMM)</h2>
+<h2>Detection Engineering Maturity Model (DEMM)</h2>
 
-<p>When talking about an organization's capability to detect advanced threats, the dogma "A chain is as strong as its weakest link" is ever more relevant. This means an immature Detectin Engineering program will severely reduce the team's ability to detect advanced threats. That is because even with a successful Threat Intelligence, Threat Hunting, and Purple Teaming program, it is real-time detections that can meaningfully reduce threat actor dwell time. In other words, Detectin Engineering is at the front lines of the battle. Other measures can help in detecting APT compromises, but since they are not reacting to real-time events, they can't impact dwell time as effectively as detection content.</p>
+<p>When talking about an organization's capability to detect advanced threats, the dogma "A chain is as strong as its weakest link" is ever more relevant. This means an immature Detection Engineering program will severely reduce the team's ability to detect advanced threats. That is because even with a successful Threat Intelligence, Threat Hunting, and Purple Teaming program, it is real-time detections that can meaningfully reduce threat actor dwell time. In other words, Detection Engineering is at the front lines of the battle. Other measures can help in detecting APT compromises, but since they are not reacting to real-time events, they can't impact dwell time as effectively as detection content.</p>
 
-<p>To measure a Detectin Engineering program's readiness to detect advanced threats, a maturity model is proposed where seven levels of maturity can be measured, each representing a significant milestone that indicates a certain level of resources and commitment is required from threat actors if they are to evade detection by the organization's security team.</p>
+<p>To measure a Detection Engineering program's readiness to detect advanced threats, a maturity model is proposed where seven levels of maturity can be measured, each representing a significant milestone that indicates a certain level of resources and commitment is required from threat actors if they are to evade detection by the organization's security team.</p>
 
 <p>It is important to note that most of the capabilities listed can be outsourced to security vendors such as EDRs and Managed Detection and Response (MDR) providers.</p>
 
@@ -101,13 +101,13 @@ h1,h2,h3,h4 {
 
 <h3>DEMM-0 -  Purely Reactive</h3>
 
-<p>At DEMM-0, the organization has little to no detection rules of its own. MDR providers may be monitoring the organization's logs; however, similar to installing EDRs on endpoints or enabling built-in IDS rules, the Detectin Engineering capability of the organization itself is purely reactive.</p>
+<p>At DEMM-0, the organization has little to no detection rules of its own. MDR providers may be monitoring the organization's logs; however, similar to installing EDRs on endpoints or enabling built-in IDS rules, the Detection Engineering capability of the organization itself is purely reactive.</p>
 
 "Reactive" in this context means the detection capability is only discovered when there are actual threats. Advanced threats are discovered long after their initial compromise, typically after they have acted on their objectives. Even when threats are detected early, if there are little to no central logging capabilities or proactive incident response planning, the eradication of threats is likely to prove ineffective against advanced threats.
 
 <h3>DEMM-1: Some Central Logging and Custom Rules</h3>
 
-<p>Organizations with this level of maturity have taken proactive steps to detect specific threats and centrally collect infrastructure logs that they consider important enough to monitor. However, the lack of sufficient and reliable logging and the immature stage of the Detectin Engineering program means there is still a lot of work to be done before detecting advanced threats without relying on threat actors making a mistake becomes a realistic capability.</p>
+<p>Organizations with this level of maturity have taken proactive steps to detect specific threats and centrally collect infrastructure logs that they consider important enough to monitor. However, the lack of sufficient and reliable logging and the immature stage of the Detection Engineering program means there is still a lot of work to be done before detecting advanced threats without relying on threat actors making a mistake becomes a realistic capability.</p>
 
 <h3>DEMM-2:  Detection-Posture-Driven Log Collection and Alerting</h3>
 
@@ -123,7 +123,7 @@ h1,h2,h3,h4 {
 
 <p>Vendor-agnostic logging and detection posture measures should also be established at this maturity level.</p>
 
-<p>While not always possible, vendor-agnostic log collection means changes in SIEM, data-lake platform, and tooling due to business reasons or other factors will have minimal adaptation cost for the security team and won't dramatically reduce the detection posture as a result. This is important because all the investment and work put into developing maturity could be wasted if foundational components of Detectin Engineering, such as log collection and rule content, are faced with instability and disruptions requiring redevelopment of lost capabilities. In other words, changes in vendors, platforms, and tooling happen, and a mature detection team must anticipate and be ready to adapt to such changes. Maturity cannot be achieved without stability.</p>
+<p>While not always possible, vendor-agnostic log collection means changes in SIEM, data-lake platform, and tooling due to business reasons or other factors will have minimal adaptation cost for the security team and won't dramatically reduce the detection posture as a result. This is important because all the investment and work put into developing maturity could be wasted if foundational components of Detection Engineering, such as log collection and rule content, are faced with instability and disruptions requiring redevelopment of lost capabilities. In other words, changes in vendors, platforms, and tooling happen, and a mature detection team must anticipate and be ready to adapt to such changes. Maturity cannot be achieved without stability.</p>
 
 <p>At this level, reliably detecting some advanced threats is practical. Centralized data collection means other programs such as Threat Intelligence and Threat Hunting also have enough information about the environment to detect threats missed by detection rules.</p>
 
@@ -135,9 +135,9 @@ h1,h2,h3,h4 {
 
 <p>A proper lifecycle should also be followed for detection rules to ensure only relevant and effective rules are alerting incident responders.</p>
 
-<p>A Detection-as-Code approach is ideal to meet these goals. The DevOps discipline emerged in the software development industry to help address similar concerns of maturity, reliability, and collaboration that allowed software developers to rapidly release features while maintaining the quality of their software. The process of making a detection rule lifecycle process compatible with a DevOps process is called Detection-as-Code. Treating rule content as if it were code (which arguably, it is!) and integrating test validation—Attack Simulation/Validation or Breach and Attack Simulation (BAS) can be used interchangeably—into the process of Detectin Engineering, much like how software engineering CI/CD pipelines integrate unit tests, allows security teams to rapidly release and tune rule content and thereby ensure their capability to detect advanced threats stays current with the latest threat actor capabilities, techniques, and trends.</p>
+<p>A Detection-as-Code approach is ideal to meet these goals. The DevOps discipline emerged in the software development industry to help address similar concerns of maturity, reliability, and collaboration that allowed software developers to rapidly release features while maintaining the quality of their software. The process of making a detection rule lifecycle process compatible with a DevOps process is called Detection-as-Code. Treating rule content as if it were code (which arguably, it is!) and integrating test validation—Attack Simulation/Validation or Breach and Attack Simulation (BAS) can be used interchangeably—into the process of Detection Engineering, much like how software engineering CI/CD pipelines integrate unit tests, allows security teams to rapidly release and tune rule content and thereby ensure their capability to detect advanced threats stays current with the latest threat actor capabilities, techniques, and trends.</p>
 
-<p>Implementing Detection-as-Code in Detectin Engineering means having a CI/CD pipeline that integrates Attack Simulations and attack validations to ensure configured rules can detect threats they are expected to detect, and that changes in rules, log availability, or platform availability do not silently affect the organization's capability to detect threats. Version control, rule standard compliance (to make rules easy to audit, integrate, and tune), and other processes needed to implement a mature Detectin Engineering program should also be implemented as part of a Detection-as-Code pipeline.</p>
+<p>Implementing Detection-as-Code in Detection Engineering means having a CI/CD pipeline that integrates Attack Simulations and attack validations to ensure configured rules can detect threats they are expected to detect, and that changes in rules, log availability, or platform availability do not silently affect the organization's capability to detect threats. Version control, rule standard compliance (to make rules easy to audit, integrate, and tune), and other processes needed to implement a mature Detection Engineering program should also be implemented as part of a Detection-as-Code pipeline.</p>
 
 <p>At DEMM-4, the detection team should be measuring false positive rates and detection gaps, with a clear goal of minimizing the number of false positive detections and maximizing the number of true positive detections of threat actor activity. With metrics and measurements, it should be noted that understanding the underlying causes is the goal. Metrics should never be targets on their own.</p>
 
@@ -157,7 +157,7 @@ h1,h2,h3,h4 {
 
 <h3>DEMM-6: Optimal log collection and detection capability with coverage for all enterprise environments</h3>
 
-<p>What sets apart DEMM-6 from DEMM-5 is that log collection is considered to be optimal and sufficient to allow detection of all known significant threat actor tools and techniques. The security team has also matured to the point that techniques that are new or not-so-well-known are being discovered proactively and operationalized as part of the Detectin Engineering process.</p>
+<p>What sets apart DEMM-6 from DEMM-5 is that log collection is considered to be optimal and sufficient to allow detection of all known significant threat actor tools and techniques. The security team has also matured to the point that techniques that are new or not-so-well-known are being discovered proactively and operationalized as part of the Detection Engineering process.</p>
 
 <p>The security team at this level of maturity has confidence that security log collection and security tool or platform deployments (e.g., endpoint agents, firewalls, and the like) encompass all assets and resources of the organization.</p>
 
@@ -234,7 +234,7 @@ h1,h2,h3,h4 {
 
 <p>Detection rules provide assurance that when threat actors generate some pattern of activity, alerts will be generated which allow incident handlers to respond to the threat. However, simply defining a rule alone without validating its correctness could result in a false sense of security. Even if a rule is defined correctly, changes in the availability or structure of logs during the lifetime of a rule can result in the rule becoming ineffective or degraded.</p>
 
-<p>A mature Detectin Engineering program that is using a Detection-as-Code process can implement CI/CD pipelines where Attack Simulations can be executed continuously for test-validating production rule content. Integrations with the detection platform can then be used to validate the success or failure of the predefined Attack Simulation scenarios.</p>
+<p>A mature Detection Engineering program that is using a Detection-as-Code process can implement CI/CD pipelines where Attack Simulations can be executed continuously for test-validating production rule content. Integrations with the detection platform can then be used to validate the success or failure of the predefined Attack Simulation scenarios.</p>
 
 <h3>Best practices </h3>
 
@@ -290,11 +290,11 @@ In the reference Attack Simulation/Validation setup, there two Attack Simulation
 
 <p>Defending against advanced threats is a competition of resources between an organization and the sponsoring state or criminal organization behind APTs. Different organizations and teams have different resources and risk appetites. Security teams should aim to make the most effective use of the resources at their disposal so that advanced threats will face the most hostile environment when they attack the organization.</p>
 
-<p>In this post, Detectin Engineering best practices and a capability-centric detection maturity model have been introduced. Security teams should measure the resources available to them and use the Detectin Engineering Maturity Model to gauge the level of readiness they have against advanced threats.</p>
+<p>In this post, Detection Engineering best practices and a capability-centric detection maturity model have been introduced. Security teams should measure the resources available to them and use the Detection Engineering Maturity Model to gauge the level of readiness they have against advanced threats.</p>
 
-<p>Security teams that have resources at their disposal that permit mature Detectin Engineering, Threat Hunting, Purple Teaming, and/or Threat Intelligence programs to be developed should evaluate what their current level of maturity is and how they can achieve a detection posture that is effective against advanced threats.</p>
+<p>Security teams that have resources at their disposal that permit mature Detection Engineering, Threat Hunting, Purple Teaming, and/or Threat Intelligence programs to be developed should evaluate what their current level of maturity is and how they can achieve a detection posture that is effective against advanced threats.</p>
 
-<p>Specifically for a Detectin Engineering program, modern Detection-as-Code practices can be implemented with tools and processes that will allow detection engineers to craft and tune rules that are correct, reliable, and can detect advanced threat actors within their environment.</p>
+<p>Specifically for a Detection Engineering program, modern Detection-as-Code practices can be implemented with tools and processes that will allow detection engineers to craft and tune rules that are correct, reliable, and can detect advanced threat actors within their environment.</p>
 
 <p>Lastly, while in this post I've detailed one approach and perspective of winning battles against APTs, it is by no means a definitive work, nor is it without room for improvement. The core strategic take of this post is that victory against APT actors requires maturity which can only be achieved by deliberate, formal and disciplined development of mature capabilities that have the highest cost the organization can impose against its adversaries.
 
