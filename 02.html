@@ -131,17 +131,17 @@ h1,h2,h3,h4 {
 
 <p>The maturity level achieved at DEMM-3 comes with certain assumptions, such as detection rules being functional, evasion scenarios threat actors might use being considered by rules, and logs collected being parsed in a way that is compatible with rule content.</p>
 
-<p>At DEMM-3, broken, missing, or incomplete rules are detected after a compromise happens. At DEMM-4, rules are validated using realistic attack simulations. Rules should also be subject to regular review and tuning.</p>
+<p>At DEMM-3, broken, missing, or incomplete rules are detected incidentally or after a compromise happens. At DEMM-4, rules are validated using realistic attack simulations. Rules should also be subject to regular review and tuning.</p>
 
 <p>A proper lifecycle should also be followed for detection rules to ensure only relevant and effective rules are alerting incident responders.</p>
 
-<p>A Detection-as-Code approach is ideal to meet these goals. The DevOps discipline emerged in the software development industry to help address similar concerns of maturity, reliability, and collaboration that allowed software developers to rapidly release features while maintaining the quality of their software. Integrating security checks and controls into the DevOps process is called Detection-as-Code. Treating rule content as if it were code (which arguably, it is!) and integrating test validation (attack simulation/validation, Breach and Attack Simulation (BAS) can be used interchangeably) into the process of detection engineering—much like software engineering—allows security teams to rapidly release and tune rule content and thereby ensure their capability to detect advanced threats stays current with the latest threat actor capabilities, techniques, and trends.</p>
+<p>A Detection-as-Code approach is ideal to meet these goals. The DevOps discipline emerged in the software development industry to help address similar concerns of maturity, reliability, and collaboration that allowed software developers to rapidly release features while maintaining the quality of their software. THe process of making a detection rule lifecycle process compatible with a DevOps process is called Detection-as-Code; treating rule content as if it were code (which arguably, it is!) and integrating test validation -- attack simulation/validation, Breach and Attack Simulation (BAS) can be used interchangeably -- into the process of detection engineering, much like how software engineering CI/CD pipelines integrate unit tests, allows security teams to rapidly release and tune rule content and thereby ensure their capability to detect advanced threats stays current with the latest threat actor capabilities, techniques, and trends.</p>
 
 <p>Implementing Detection-as-Code in detection engineering means having a CI/CD pipeline that integrates attack simulations and attack validations to ensure configured rules can detect threats they are expected to detect, and that changes in rules, log availability, or platform availability do not silently affect the organization's capability to detect threats. Version control, rule standard compliance (to make rules easy to audit, integrate, and tune), and other processes needed to implement a mature detection engineering program should also be implemented as part of a Detection-as-Code pipeline.</p>
 
 <p>At DEMM-4, the detection team should be measuring false positive rates and detection gaps, with a clear goal of minimizing the number of false positive detections and maximizing the number of true positive detections of threat actor activity. With metrics and measurements, it should be noted that understanding the underlying causes is the goal. Metrics should never be targets on their own.</p>
 
-<p>Additionally, processes should be established to reactively as well as proactively consume feedback from incident responders about false positive rules as well as the quality of the detection content. Strategies such as using large language models (LLMs) to proactively identify false positive patterns as well as detection gaps should be in place.</p>
+<p>Additionally, processes should be established to reactively as well as proactively consume feedback from incident responders about false positive rules as well as the quality of the detection content. Strategies to allocate detection engineer's time efficiently, such as using large language models (LLMs) to proactively identify false positive patterns as well as detection gaps --Identify being the keyword, humans should always be in the decision making loop--should be in place.</p>
 
 <p>Organizations at this level of maturity have a stable, scalable, and reliable capability to detect some advanced threats.</p>
 
@@ -280,9 +280,11 @@ h1,h2,h3,h4 {
 
 <p>In this post, detection engineering best practices and a capability-centric detection maturity model have been introduced. Security teams should measure the resources available to them and use the Detection Engineering Maturity Model to gauge the level of readiness they have against advanced threats.</p>
 
-<p>Security teams that have resources at their disposal that permit mature detection engineering, threat hunting, Purple Teaming, and/or threat intelligence programs to be developed should evaluate what their current level of maturity is and how they can achieve a detection posture that is effective against advanced threats.</p>
+<p>Security teams that have resources at their disposal that permit mature detection engineering, threat hunting, purple teaming, and/or threat intelligence programs to be developed should evaluate what their current level of maturity is and how they can achieve a detection posture that is effective against advanced threats.</p>
 
 <p>Specifically for a detection engineering program, modern Detection-as-Code practices can be implemented with tools and processes that will allow detection engineers to craft and tune rules that are correct, reliable, and can detect advanced threat actors within their environment.</p>
+
+<p>Lastly, while in this post I've detailed one approach and perspective of winning battles, it is by no means a definitive work or without room for improvement. The core strategic take of this post is that victory against APT actors requires maturity which can only be acheived by deliberate, formal and disciplined development of mature capabilities that have the highest cost the organization can impose against its adversaries.
 
 <!-- Footer -->
     <br><br>
