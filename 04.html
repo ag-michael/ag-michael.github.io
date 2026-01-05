@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf8">
+
+<html><head>
+<title>CDPTunnel: Using browsers to route C2/Exfil traffic</title>
+</head>
+<body>
+  <style>
+body {
+  font-family: Verdana, sans-serif;
+  background-color:#1a1b1c;
+  color:azure;
+  a:link{ color:aquamarine;}
+  a:visited{ color:teal;}
+  a:hover{ color:wheat;}
+  a:active{ color:whitesmoke;}
+
+}
+h1,h2,h3,h4 {
+    color:wheat;
+}
+</style>
+<!-- Header -->
+<div style="background-color:#1a1b1c;margin-left:20%;display:flex;justify-content: space-around;align-items: center;position:sticky;top:0;opacity:1;z-index: 3;">
+<div style="text-align: left;margin-right:20%;"><a href="02.html">&lt;</a></div>
+<div style="text-align: center;margin-right:20%;"><a href="index.html">~</a></div>
+<div style="text-align: right;margin-right:20%;"><a href="04.html">&gt;</a></div>
+</div>
+
+<!-- Body -->
+<hr style="color:wheat;">
+<div style="margin-left:20%;margin-right:20%;overflow-wrap:break-word;">
+<h1>CDPTunnel: Using browsers to route C2/Exfil traffic</h1>
+
+<h2>Thinking about evasion techniques</h2>
+
+<p>I've been looking into how EDRs and SIEMs detect post-exploitation behavior. This is a complex topic, but one of the patterns I observed is the correlation of network activity and process activity.</p>
+
+<p>In particular, a process-image that was recently introduced to a system connecting to rare internet destinations is a red flag most EDR solutions should be flagging.
+There are several techniques to evade such detections, such as using popular internet services (Living-off-the-land sites, See:<a href="https://lots-project.com/" target="_blank">LOTS project</a>).
+Another is delaying and/or proxying execution of the C2 payload so that the initially introduced program isn't associated with the program/code that is now making the network connections (not easy to pull off in my experience).
+</p>
+
+<p>There is also the rare but very annoying prospect of your command-and-control server being categorized by firewalls and proxies as risky. Often this results in a block, but sometimes network policies allow users to click-through the block page.</p>
+
+<h2>CDPTunnel</h2>
+
+<p>I've always been curious about using browsers as a proxy to do things, so I looked up different tools that could help me proxy C2 traffic through browsers.</p>
+
+<p>My search was admittedly not extensive (although Gemini assures me it is complete-enough :) ), but I couldn't find a tool that did this already.
+Either way, I wanted to give it a shot, since the idea is simple enough, and I wanted an opportunity to practice writing some Golang.</p>
+
+<p>CDPTunnel uses the `chromedp` Go module to connect to browsers that support the CDP protocol (or electron apps) to execute Javascript XHR requests on the browsers and report back the response to clients.</p>
+
+<p>The Readme contains up-to-date configuration and usage instructions, so I won't mention any of that in this post:</p>
+
+<a href="https://github.com/ag-michael/CDPTunnel" target="_blank">Project Page</a>
+
+<h2>Usage example</h2>
+
+<p>Instead, let me show-and-tell by generating a meterpreter payload with msfvenom and show CDPTunnel in action as I get a shell using an Edge browser process to route the traffic.</p>
+
+<b>Step 1: Generate the payload</b><br>
+<br>The HttpHostHeader parameter should point to the tunnel server's IP.<br><br>
+<div style="text-align: center;background-color: white;"><img src="04_00.png"/></div>
+<br>
+<b>Step 2: Start CDPTunnel in server mode</b><br>
+<br>
+<div style="text-align: center;background-color: white;"><img src="04_01.png"/></div>
+<br>
+<b>Step 3: Run CDPTunnel, and then the C2 process on the victim host</b><br>
+<br>The multi-handler in step #4 should already be running at this point!<br></br>
+<div style="text-align: center;background-color: white;"><img src="04_02.png"/></div>
+<br>
+<b>Step 4: Catch the shell and $profit$</b><br>
+<br>
+<div style="text-align: center;background-color: white;"><img src="04_03.png"/></div>
+<br>
+<b>Output from the server-side tunnel</b><br>
+<br>
+<div style="text-align: center;background-color: white;"><img src="04_04.png"/></div>
+<br>
+
+<h2>C2 Architecture</h2>
+
+<p>This project made me think a bit more about C2 architecture. In particular, how the remote-debugging aspect of this technique opens up interesting opportunities</p>
+
+<p>For example, two victim machines, both with internet access, can use browsers on the other device for their C2 connection. When looking at logs from one device alone, the c2 process only connects to an internal IP (the other machine).</p>
+
+<h2>Other Thoughts</h2>
+
+<p>Right now, CDPTunnel is using simple XHR requests, navigating a tab for each request. This is the most stable way I've found so far, but I'm looking into things like background workers.</p>
+
+<p>I've considered using extensions, but they generate plenty of noise, especially when they're side-loaded. Plus, another technique I want to explore is using electron applications instead. Can I enable CDP on electron apps without heavy tampering? Would that invalidate the app's signature? I don't know right now, but these are some of the things I'm mulling over.</p>
+
+<p>As always, thanks for reading this post, and let me know of any errors, improvement opportunities, or issues.</p>
+    <!-- Footer -->
+    <br><br>
+<div style="background-color:#1a1b1c;margin-left:20%;display:flex;justify-content: space-evenly;align-items: center;position:sticky;opacity:1;z-index: 3;">
+<div style="text-align: left;margin-right:20%;"><a href="https://github.com/ag-michael">My Github</a></div>
+<div style="text-align: center;margin-right:20%;">Email:infosec.michael[a t]pm . me</a></div>
+<div style="text-align: right;margin-right:20%;"><a href="https://bsky.app/profile/infosec-michael.bsky.social">@infosec-michael</a></div>
+</div>
+
+</body></html>
