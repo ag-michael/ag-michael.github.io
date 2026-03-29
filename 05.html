@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf8">
+
+<html><head>
+<title>Low-Code/No-Code C2 Infrastructure For The Lazy Hacker Using Microsoft Power Automate</title>
+</head>
+<body>
+  <style>
+body {
+  font-family: Verdana, sans-serif;
+  background-color:#1a1b1c;
+  color:azure;
+  a:link{ color:aquamarine;}
+  a:visited{ color:teal;}
+  a:hover{ color:wheat;}
+  a:active{ color:whitesmoke;}
+
+}
+h1,h2,h3,h4 {
+    color:wheat;
+}
+</style>
+<!-- Header -->
+<div style="background-color:#1a1b1c;margin-left:20%;display:flex;justify-content: space-around;align-items: center;position:sticky;top:0;opacity:1;z-index: 3;">
+<div style="text-align: left;margin-right:20%;"><a href="04.html">&lt;</a></div>
+<div style="text-align: center;margin-right:20%;"><a href="index.html">~</a></div>
+<div style="text-align: right;margin-right:20%;"><a href="06.html">&gt;</a></div>
+</div>
+
+<!-- Body -->
+<hr style="color:wheat;">
+<div style="margin-left:20%;margin-right:20%;overflow-wrap:break-word;">
+<h1>Low-Code/No-Code C2 Infrastructure For The Lazy Hacker using Microsoft Power Automate</h1>
+
+<p>I recently started automating some workflows using <a href="https://www.microsoft.com/en-us/power-platform/products/power-automate" traget="_blank">Microsoft Power Automate</a>, and immediately I started thinking about all the ways it could be abused.
+
+<p>At the end of this post, I will list some of the attack technique theories that I believe Power Automate will enable.</p>
+<p>However, I will dedicate most of this post to a simple, yet capable Power Automate flow I created over a span of roughly an hour (most of it spent on account registration and setup), that shows how easily Power Automate flows can be used to connect an implant to a control-center.
+</p>
+<br>
+<h2>What makes for a good Command-and-Control Infrastructure?</h2>
+<br>
+<p>Some of the considerations that come into mind when putting together a C2 infrastructure include:
+<br>
+<ul>
+    <li>Evasiveness: If it is easily detected, it is rendered unusable</li>
+    <li>Reliability: Unstable C2 channels can limit what you can do with them</li>
+    <li>Resiliency: Being able to fail-over or adapt to changes at either end of the command-and-control channel helps with maximizing dwell-time</li>
+    <li>Performance: Bandwidth, throughput, and latency can all affect the capabilities of the implant; File transfer and traffic-tunneling are top two capabilities I've struggled with in the past</li>
+    <li>Administrative Burden: Managing domain names, IP addresses, VPSs (or cloud-compute instances), TLS certificates, redirector configurations, and more could be a burden, and that's before you consider the burden of managing a large number of implants</li>
+</ul>
+<br>
+<p>I don't think the technique covered in this post will necessarily result in more capable post-exploit frameworks, but as I will demonstrate shortly, it reduces the effort required to implement a custom implant that is reasonably evasive (at least for its C2 component), performant and manageable.
+<br>
+<h2>What is Microsoft Power Automate?</h2>
+<br>
+<p>Power Automate is Microsoft's no-code solution that lets non-developers craft automated workflows without having to learn how to code.
+</p>
+
+<p>Historically, enterprise users used things like Office document macros to automate their work, Power Automate takes it to the next level by removing the coding requirement, and integrating not just with every application in Microsoft 365, but with just about any other RESTful API or HTTP endpoint.
+</p>
+
+<p>Here are some of the high-level concepts you should know before getting started with Power Automate:
+</p>
+<br>
+<ul>
+    <li>Flows: Each flow has a trigger (I'll use "Instant cloud flow" for this post, but there are more, such as Automated and Scheduled). The flow defines what control-flow actions or decisions will be taken as a result of the trigger</li>
+    <li>Trigger: Triggers come in many forms, an email being received, or a Teams message being posted in a chat could be some. In this post, I'll use an HTTP request trigger.</li>
+    <li>Connector: Connectors are integrations that enable some capability that can be used by an action</li>
+    <li>Actions: Actions are executed sequentially (it is possible to execute them in parallel as well), they receive inputs from the previous actions (including the trigger) and pass along their output to subsequent actions</li>
+    <li>Action parameters: Each action is different, but typically, actions have parameters (such as the subject of an email for sending an Outlook email message). A static value can be defined, as well as a dynamic input from a previous action; It is also possible to use a 'Power Fx' expression, which is a macro-like scripting language that enables more complex operations on data.</li>
+</ul>
+<br>
+<h2>The C2 Architecture</h2>
+
+<p>For this PoC, I had a few requirements of my own. such as not having to spend any money, or go through laborious ID verification processes, since after all, a real threat-actor will be detered by that as well.
+</p>
+
+<p>I was able to register an M365 Free (trial?) account with little hassle, but I had to create an organization account instead of an individual (live.com) account which wouldn't have access to Power Automate.
+</p>
+
+<p>Teams, however, was a challenge. I've used Power Automate with teams before, and as you would expect, it is a very smooth and seamless integration. Even though Teams is free for individuals, because my account was for an organization, it required a free-trial at the minimum which involved submitting credit card information, as a result I decided to take a different approach.
+</p>
+
+<p>I looked for existing Slack connectors in Power Automate, and found one. I was also able to register a free Slack account without any issues whatsoever.
+</p>
+
+<p>The Slack connector has a limitation, however: it doesn't support fetching channel messages.
+</p>
+
+<p>While the Slack connector's limitation and not wanting to use Teams were annoying, it allowed me to demonstrate an interesting capability: Making RESTful HTTP requests. I used the HTTP connector along with a Slack Bot's API token to fetch commands from the slack channel. I kept the Slack connector to post messages.
+</p>
+
+<br>
+<h2>Step-by-Step Guide</h2>
+<br>
+<p>Without further ado, here are the actions I took to create this little infrastructure.
+</p>
+
+
+<p>To get started, navigate to the Power Automate app, and click on "New Flow", and select "Instant cloud flow"
+</p>
+
+<img src="img/new_flow.PNG" height="50%" width="50%"/>
+<br>
+<p>Instant cloud flows are triggered ad-hoc by something, while Automated cloud flows are triggered by some event taking place.
+</p>
+
+<p>Next, give the instant flow a name, and select the "When an HTTP Request is Received" trigger from the Request connector
+</p>
+
+<img src="img/build_instant_flow.PNG" height="50%" width="50%"/>
+<br>
+<p>Once you've created the flow, click on the "manual" trigger, which will bring up options to configure the HTTP request parameters for the trigger.
+</p>
+
+<img src="img/http_trigger.PNG" height="50%" width="50%"/>
+<br>
+<p>I've selected "Anyone" for the "Who can trigger the flow?" parameter. However, you can add some authentication requirements here (or by checking the parameters of the request at subsequent actions).
+</p>
+
+<p>The request body JSON schema is best generated by using the "Use sample payload to generate schema" helper. Simply post a sample of the JSON request you're expecting, and it will generate the corresponding schema.
+</p>
+
+<p>The URL will be generated when you first save the flow. This is the URL the PoC implant will use.
+</p>
+
+<p>Next, connect an action to the HTTP trigger (I won't repeat this and other repetitive steps for subsequent actions to keep the post brief)
+</p>
+
+<img src="img/connect_http_trigger.PNG" height="50%" width="50%"/>
+<br>
+<p>Find the "Control" connector, under "Built-in" tools (which also contain other actions that enable control-flows), and select the "Condition" action.
+</p>
+
+<img src="img/control.PNG" height="50%" width="50%"/>
+<br>
+<img src="img/condition_connector.PNG" height="50%" width="50%"/>
+<br>
+<p>For the condition connector, select a dynamic value by clicking on the lightning icon, and select the "type" parameter from the JSON schema defined previously.
+</p>
+
+<img src="img/dynamic_value.PNG" height="50%" width="50%"/>
+<br>
+<img src="img/cond_response.PNG" height="50%" width="50%"/>
+<br>
+<p>Using the condition action, I'll check if the "type" parameter is set to "response" first, if it isn't I'll check if it is set to "request", for all other values I'll terminate the flow quietly.
+</p>
+
+<p>"Response" type messages are responses from the implant to some previously submitted request such as running a command. "Requests" are the implant requesting a task, if one is available.
+</p>
+
+<p>When the response check is true, I added an action "Post message (V2)" using the Slack connector.
+</p>
+
+<img src="img/slack_connectors.PNG" height="50%" width="50%"/>
+<br>
+<img src="img/slack_post.PNG" height="50%" width="50%"/>
+<br>
+<p>The connector that really makes C2 work, is the HTTP response connector. For response type messages, the flow will use this connector to simply repeat back to the implant the message that was posted to Slack.
+</p>
+
+<p>It's worth noting that the response action is under the "Request" connector, which made it a bit hard to find at first.
+</p>
+
+<img src="img/request_connector.PNG" height="50%" width="50%"/>
+<br>
+
+<img src="img/slack_channel_message_resp.PNG" height="50%" width="50%"/>
+<br>
+<p>For the request flow, I needed to set up a Slack app/bot, I won't go into the details of that here, but the OAuth token and bot token scopes I've defined are as you can see below:
+</p>
+
+<img src="img/slack_OAuth.PNG" height="50%" width="50%"/>
+<br>
+<img src="img/slack_scopes.PNG" height="50%" width="50%"/>
+<br>
+<p>For the request message type, I added an HTTP request action
+</p>
+
+<img src="img/slack_api_get_request_chan.PNG" height="50%" width="50%"/>
+<br>
+<p>This did require querying the list channels API to get the channel ID. Setting the limit to 1 gets only the latest message, but the PoC implant can handle multiple messages.
+</p>
+
+<p>The implant finally gets its command by using a Response action (via the Request connector, as mentioned earlier).
+</p>
+
+<img src="img/slack_response.PNG" height="50%" width="50%"/>
+
+<p>Here is what the final flow looks like:
+</p>
+
+<img src="img/final_flow.PNG" height="50%" width="50%"/>
+<br>
+<p>After saving it, be sure to actually turn on the flow:
+</p>
+
+<img src="img/turnonflow.PNG" height="50%" width="50%"/>
+<br>
+<p>Here is a screenshot from the Slack channel showing the interaction with the implant:
+</p>
+
+<img src="img/slack_io.PNG" height="50%" width="50%"/>
+<br>
+<h2>PoC Implant</h2>
+
+<p>I have some untested ideas to make even the implant part no-code, but for now I've put together a simple ~40 line Python script to demonstrate the concept.
+</p>
+
+<p>I plan on doing additional research as time and interest allows, so I've created a repo for it here:
+</p>
+
+<a href="https://github.com/ag-michael/PowerHack/tree/main" target="_blank">PowerHack</a>
+
+<h2>Other Thoughts and Ideas</h2>
+
+<p>To start with, the command-and-control capability can go far beyond simple process executions.
+</p>
+
+<p>Some ideas around that:
+</p>
+
+<ul>
+    <li>Handle file transfer/exfil by using any number of connectors, such as OneDrive, Email and Teams Connectors</li>
+    <li>Commandeer a local Teams install and enable ad-hoc screen-sharing sessions (sounds hard!)</li>
+    <li>Use the implant to proxy http requests into the target environment (including protocols like Windows Remoting!)</li>
+    <li>Proxy C2 across multiple organizations in case of account take-downs</li>
+    <li>Manage implant operators, and redirect the C2 to different control centers as need arises</li>
+    <li>Sleep/Wakeup the implant based on a user's Teams status by adding checks in the flow.</li>
+</ul>
+
+<h2>More Attack Theory</h2>
+
+<p>Data exfiltration and lateral movement are the two areas that might be ripe for attacker misuse. Preventive and defensive measures in M365 alike largely rely on IP addresses and users belonging to the right organization.</p>
+<p>For this PoC, I used my own organization, but if I had access to an M365 user account in a target environment, will operations like copying all their files and emails to an external organization's Onedrive, or as demonstrated in this post, an arbitrary HTTP endpoint (Slack, Discord, you name it) be detected or prevented?
+After all, the requestor is Power Automate; a Microsoft application, in the M365 cloud is performing the operation. The detail of where the data is sent only exists in the flow's definition.</p>
+
+<p>It is possible to implement tenant isolation DLP policies in M365, but I wouldn't presume an organization has them setup sufficiently. And I am not sure if something like an HTTP request connector is detered by this; If outbound access is restricted, so long as an HTTP trigger can be accessed outside of the organization, it is still possible to return the exfiltrated data as a response to the trigger's invocation. The bigger concern is cross-tenant account connections, and I would think it is safe to assume DLP policies might be sufficient to address them.
+</p>
+
+
+<p>So, while this C2 PoC is interesting, if I had access to an M365 account as part of a planned RedTeam exercise (or as part of future attack-research) I'll attempt to use my own M365 tenant and accounts to use Power Automate to access and interact with the target M365 user and tenant.
+Why setup mail forwarding rules when you can setup a Power Automate flow to read the message, mark it unread and send a copy over to an arbitrary destination?</p>
+
+<h2>Living Off the Cloud</h2>
+
+<p>The C2 channel demonstrated in this post isn't all that novel. You could just setup your implant to talk to Slack directly after all. Slack is on the list over at the <a href="https://lots-project.com" target="_blank">LOTS project</a>, but Power Automate however isn't.
+But being able to use a Microsoft-trusted domain for C2 aside, it adds a layer of resiliency. You might have to stop using Slack for some reason some day. And if you use techniques like the <a href="https://ag-michael.github.io/05.html" target="_blank">CDPTunnel</a> PoC I detailed in a separate post, you can make it look like a user is visiting Power Automate from their browser.
+</p>
+<p>That said, this is an unusual (couldn't find much research/PoC on it) method of using a trusted site for command-and-control. The more interesting advantage is the potential of added capability to the implant by means of Power Automate flows.
+I think this is only the tip of the iceberg, and further research will show a lot more potential avenues of attack in M365 by using Power Automate.</p>
+
+<p>Finally, thanks for reading this post and let me know of any feedback and suggestions.
+</p>
+
+<p>I have submitted Power Automate to the LOTS project, so defenders can adapt accordingly.
+</p>
+
+<img src="img/lots_submission.png" height="50%" width="50%"/>
+<br>
+    <!-- Footer -->
+    <br><br>
+<div style="background-color:#1a1b1c;margin-left:20%;display:flex;justify-content: space-evenly;align-items: center;position:sticky;opacity:1;z-index: 3;">
+<div style="text-align: left;margin-right:20%;"><a href="https://github.com/ag-michael">My Github</a></div>
+<div style="text-align: center;margin-right:20%;">Email:infosec.michael[a t]pm . me</a></div>
+<div style="text-align: right;margin-right:20%;"><a href="https://bsky.app/profile/infosec-michael.bsky.social">@infosec-michael</a></div>
+</div>
+
+</body></html>
