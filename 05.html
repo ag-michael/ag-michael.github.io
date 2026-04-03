@@ -65,7 +65,7 @@ h1,h2,h3,h4 {
 </p>
 <br>
 <ul>
-    <li>Flows: Each flow has a trigger (I'll use "Instant cloud flow" for this post, but there are more, such as Automated and Scheduled). The flow defines what control-flow actions or decisions will be taken as a result of the trigger</li>
+    <li>Flows: Each flow has a trigger (I'll use "Instant cloud flow" for this post, but there are more, such as Automated and Scheduled; Desktop flows allow you to automate workflows on a Windows install). The flow defines what control-flow actions or decisions will be taken as a result of the trigger</li>
     <li>Trigger: Triggers come in many forms, an email being received, or a Teams message being posted in a chat could be some. In this post, I'll use an HTTP request trigger.</li>
     <li>Connector: Connectors are integrations that enable some capability that can be used by an action</li>
     <li>Actions: Actions are executed sequentially (it is possible to execute them in parallel as well), they receive inputs from the previous actions (including the trigger) and pass along their output to subsequent actions</li>
@@ -224,6 +224,7 @@ h1,h2,h3,h4 {
 
 <ul>
     <li>Handle file transfer/exfil by using any number of connectors, such as OneDrive, Email and Teams Connectors</li>
+    <li>Use Desktop flows to create a complete no-code implant framework</li>
     <li>Commandeer a local Teams install and enable ad-hoc screen-sharing sessions (sounds hard!)</li>
     <li>Use the implant to proxy http requests into the target environment (including protocols like Windows Remoting!)</li>
     <li>Proxy C2 across multiple organizations in case of account take-downs</li>
@@ -244,6 +245,8 @@ After all, the requestor is Power Automate; a Microsoft application, in the M365
 <p>So, while this C2 PoC is interesting, if I had access to an M365 account as part of a planned RedTeam exercise (or as part of future attack-research) I'll attempt to use my own M365 tenant and accounts to use Power Automate to access and interact with the target M365 user and tenant.
 Why setup mail forwarding rules when you can setup a Power Automate flow to read the message, mark it unread and send a copy over to an arbitrary destination?</p>
 
+<p>Desktop flows are also very powerful for RPA automation. I don't know how well they work for malware authoring purposes (see links to existing research at the end of this post), but I have a strong suspicion that they will at least enable UI-centric capabilities that a traditional implant would have achieved by running commands that are monitored by EDRs.</p>
+<br>
 <h2>Living Off the Cloud</h2>
 
 <p>The C2 channel demonstrated in this post isn't all that novel. You could just setup your implant to talk to Slack directly after all. Slack is on the list over at the <a href="https://lots-project.com" target="_blank">LOTS project</a>, but Power Automate however isn't.
@@ -260,7 +263,15 @@ I think this is only the tip of the iceberg, and further research will show a lo
 
 <img src="img/lots_submission.PNG" height="50%" width="50%"/>
 <br>
-    <!-- Footer -->
+<h2>Existing Research</h2>
+
+<p>Here are some links to existing attack-research I've found involving Power Automate:</p>
+
+<a href="https://www.mbgsec.com/assets/pdfs/2023-02-28_DC9723_No_Code_Malware_Windows_11_At_Your_Service.pdf" target="_blank">No Code Malware:Windows At Your Service</a>
+<a href="https://github.com/mbrg/defcon30/tree/main/No_Code_Malware" target="_blank">Github repo with additional links for 'No Code Malware:Windows At Your Service'</a>
+<a href="https://www.varonis.com/blog/power-automate-data-exfiltration#:~:text=When%20creating%20a%20flow%20that,file%2C%20the%20flow%20will%20trigger." target="_blank">Using Power Automate for Covert Data Exfiltration in Microsoft 365</a>
+
+<!-- Footer -->
     <br><br>
 <div style="background-color:#1a1b1c;margin-left:20%;display:flex;justify-content: space-evenly;align-items: center;position:sticky;opacity:1;z-index: 3;">
 <div style="text-align: left;margin-right:20%;"><a href="https://github.com/ag-michael">My Github</a></div>
